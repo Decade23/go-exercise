@@ -1,58 +1,28 @@
 package main
 
 import (
-	"strconv"
 	"fmt"
 	) 
 
 func main() {
-	var name string = "Dedi Fardiyanto"
-	age := 23
-	fmt.Println("Hello World " + name + " Age: " + strconv.Itoa(age)) 
-	
-	// loop
-	// for normal
-	// for i := 1; i <= 100; i ++ {
-	// 	fmt.Println("im learn of go : ", i)
-	// 	if i == 100 {
-	// 		fmt.Println("------------------------------------------")
-	// 	}
+	// hitung rata-rata
+	// scores := [8]int{100, 80, 97, 85, 90, 65, 78, 84}
+	// scores := [8]int{100, 80, 75, 92, 70, 93, 88, 67}
+	// var totalScore int
+	// for _, score := range scores {
+	// 	totalScore += score
 	// }
+	// // average of scores is
+	// // fmt.Println("Total ", float64(totalScore))
+	// fmt.Println("Rata-rata dari score tsb @ ", float64(totalScore) / float64(len(scores)))
 
-	// for style while
-	// a := 1
-	// for a <= 100 {
-	// 	fmt.Println("learn of go : ", a)
-	// 	a++
-	// }
+		scores := [8]int{100, 80, 97, 85, 90, 65, 78, 84}
+		var goodScores []int
 
-	// for style ForEach
-	// sentence := "here we are learning of GO"
-	// for i, l := range sentence {
-	// 	fmt.Println("index: ", i, " letter: ", string(l))
-	// }
-
-	// for i, l := range sentence {
-		// ls := string(l)
-		// using modulus
-		// if i % 2 != 0 {
-		// 	fmt.Println("index : ", i, " letter: ", ls)
-		// }
-
-		// filter print by text vocal
-		// switch ls {
-		// case "a", "i", "u", "e", "o":
-		// 	fmt.Println("index : ", i, " letter: ", ls)
-		// }
-	// }
-
-	// array
-	arr := [...]string {
-		"c", "c#", "go", "php", "javascript",
-	}
-	fmt.Println("array length : ", len(arr))
-	for idx, let := range arr {
-		fmt.Println("idx : ", idx, " word: ", let)
-	}
-
+		for _, score := range scores {
+			if score >= 90 {
+				goodScores = append(goodScores, score)
+			}
+		}
+		fmt.Println("Good scores is ", goodScores)
 }
