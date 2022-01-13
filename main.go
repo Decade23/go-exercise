@@ -1,58 +1,52 @@
 package main
 
 import (
-	"strconv"
 	"fmt"
 	) 
 
 func main() {
-	var name string = "Dedi Fardiyanto"
-	age := 23
-	fmt.Println("Hello World " + name + " Age: " + strconv.Itoa(age)) 
-	
-	// loop
-	// for normal
-	// for i := 1; i <= 100; i ++ {
-	// 	fmt.Println("im learn of go : ", i)
-	// 	if i == 100 {
-	// 		fmt.Println("------------------------------------------")
-	// 	}
-	// }
+	// make variable map
+	// var myMap map[string]int
 
-	// for style while
-	// a := 1
-	// for a <= 100 {
-	// 	fmt.Println("learn of go : ", a)
-	// 	a++
-	// }
+	// declare first value of map
+	// myMap = map[string]int{}
 
-	// for style ForEach
-	// sentence := "here we are learning of GO"
-	// for i, l := range sentence {
-	// 	fmt.Println("index: ", i, " letter: ", string(l))
-	// }
+	// then insert data of map
+	// myMap["GO"] = 10
+	// myMap["Ruby"] = 9
+	// myMap["Laravel"] = 8
+	// myMap["PHP"] = 8
 
-	// for i, l := range sentence {
-		// ls := string(l)
-		// using modulus
-		// if i % 2 != 0 {
-		// 	fmt.Println("index : ", i, " letter: ", ls)
-		// }
+	// or make map like below
+	// myMap
+	// insert value directly on map
+	myMap := map[string]string{"GO": "Nice", "Ruby": "Sure", "JS": "Nice Try"}
 
-		// filter print by text vocal
-		// switch ls {
-		// case "a", "i", "u", "e", "o":
-		// 	fmt.Println("index : ", i, " letter: ", ls)
-		// }
-	// }
-
-	// array
-	arr := [...]string {
-		"c", "c#", "go", "php", "javascript",
-	}
-	fmt.Println("array length : ", len(arr))
-	for idx, let := range arr {
-		fmt.Println("idx : ", idx, " word: ", let)
+	for idx, val := range myMap {
+		fmt.Println("key: ", idx, " value: ", val)
 	}
 
+	fmt.Println("----------------------------------------------------")
+
+	delete(myMap, "Ruby")
+	for idx, val := range myMap {
+		fmt.Println("key: ", idx, " value: ", val)
+	}
+
+	fmt.Println("----------------------------------------------------")
+
+	k, is := myMap["GO"]
+
+	fmt.Println("check if key: " + k +" of map is exist: ", is)
+
+	fmt.Println("map on slice ----------------------------------------------------")
+
+	sliceMap := []map[string]string{
+		{"student":"Mario", "value": "A"},
+		{"student":"Jun", "value": "B"},
+		{"student":"Jey", "value": "C"},
+	}
+	for _, smap := range sliceMap {
+		fmt.Println("murid bernama: ", smap["student"], " mendapat nilai: ", smap["value"])
+	}
 }
