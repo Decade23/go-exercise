@@ -1,58 +1,67 @@
 package main
 
 import (
-	"strconv"
+	"errors"
 	"fmt"
 	) 
 
 func main() {
-	var name string = "Dedi Fardiyanto"
-	age := 23
-	fmt.Println("Hello World " + name + " Age: " + strconv.Itoa(age)) 
+	// luas, kel := calcPref(20, 4)
+	// fmt.Println("luas: ", luas, " keliling: ", kel)
+
+	quiz()
+}
+
+func calc(panjang, lebar int) (int, int) {
+	luas := panjang * lebar
+	keliling := 2 * ( panjang + lebar)
+
+	return luas, keliling
+}
+
+func calcPref(panjang, lebar int) (luas int, keliling int) {
+	luas = panjang * lebar
+	keliling = 2 * ( panjang + lebar)
+	return
+}
+
+func quiz() {
+	scores := []int{10, 5, 8, 9, 7}
+	total := sum(scores)
+	fmt.Println("quiz scores: ", total)
+
+	res, err := calQuiz(10, 2, "/")
+	if err != nil {
+		fmt.Println("Terjadi kesalahan")
+		fmt.Println(err.Error())
+	}
+	fmt.Println(res)
+	// res, err := calQuiz(10, 2, "+")
+	// res, err := calQuiz(10, 2, "-")
+	// res, err := calQuiz(10, 2, "*")
+	// res, err := calQuiz(10, 2, "/")
+}
+
+func calQuiz(number1, number2 int, operation string) (res int, err error) {
+	switch operation {
+		case "+":
+			res = number1 + number2
+			case "-":
+				res = number1 - number2
+				case "*":
+					res = number1 * number2
+					case "/":
+						res = number1 / number2
+						default:
+							err = errors.New("Unkwon Operation")
+	}
+	return
+}
+
+func sum(scores []int) (res int) {
 	
-	// loop
-	// for normal
-	// for i := 1; i <= 100; i ++ {
-	// 	fmt.Println("im learn of go : ", i)
-	// 	if i == 100 {
-	// 		fmt.Println("------------------------------------------")
-	// 	}
-	// }
-
-	// for style while
-	// a := 1
-	// for a <= 100 {
-	// 	fmt.Println("learn of go : ", a)
-	// 	a++
-	// }
-
-	// for style ForEach
-	// sentence := "here we are learning of GO"
-	// for i, l := range sentence {
-	// 	fmt.Println("index: ", i, " letter: ", string(l))
-	// }
-
-	// for i, l := range sentence {
-		// ls := string(l)
-		// using modulus
-		// if i % 2 != 0 {
-		// 	fmt.Println("index : ", i, " letter: ", ls)
-		// }
-
-		// filter print by text vocal
-		// switch ls {
-		// case "a", "i", "u", "e", "o":
-		// 	fmt.Println("index : ", i, " letter: ", ls)
-		// }
-	// }
-
-	// array
-	arr := [...]string {
-		"c", "c#", "go", "php", "javascript",
+	for _, score := range scores {
+		res += score
 	}
-	fmt.Println("array length : ", len(arr))
-	for idx, let := range arr {
-		fmt.Println("idx : ", idx, " word: ", let)
-	}
-
+	return
 }
