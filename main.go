@@ -12,11 +12,36 @@ import (
 		IsActive bool
 	}
 
+	// method is collect of function has struct
+
+	// method of user
+	func (user User) display() string {
+		return fmt.Sprintf("Name: %s %s, Email: %s", user.FirstName, user.LastName, user.Email)
+	}
+
 	type Group struct {
 		Name string
 		Admin User
 		Users []User
 		IsAvailable bool
+	}
+
+	// method of group
+	func (group Group) displayGroup() {
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Printf("Name Of Group: %s", group.Name)
+		fmt.Println("")
+		fmt.Printf("Admin Of Group: %s", group.Admin.FirstName)
+		fmt.Println("")
+		fmt.Printf("Member Count: %d", len(group.Users))
+		
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("User Of Group: ")
+		for _, u := range group.Users {
+		fmt.Println(u.FirstName + " " + u.LastName)
+		}
 	}
 func main() {
 	// // initialize struct of User
@@ -44,6 +69,15 @@ func main() {
 	group := Group{Name: "Group 1", Admin: user, Users: users, IsAvailable: true}
 
 	displayGroup(group)
+	
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("")
+	
+	fmt.Println("Method-------------------------------------------------------")
+	fmt.Println(user2.display())
+	
+	fmt.Println("group.display()")
+	group.displayGroup()
 }
 
 // struct as params func
