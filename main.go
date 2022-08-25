@@ -2,102 +2,55 @@ package main
 
 import (
 	"fmt"
-	) 
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	jsoniter "github.com/json-iterator/go"
+	"net/http"
+)
 
-	type User struct {
-		ID int
-		FirstName string
-		LastName string
-		Email string
-		IsActive bool
-	}
-
-	// method is collect of function has struct
-
-	// method of user
-	func (user User) display() string {
-		return fmt.Sprintf("Name: %s %s, Email: %s", user.FirstName, user.LastName, user.Email)
-	}
-
-	type Group struct {
-		Name string
-		Admin User
-		Users []User
-		IsAvailable bool
-	}
-
-	// method of group
-	func (group Group) displayGroup() {
-		fmt.Println("")
-		fmt.Println("")
-		fmt.Printf("Name Of Group: %s", group.Name)
-		fmt.Println("")
-		fmt.Printf("Admin Of Group: %s", group.Admin.FirstName)
-		fmt.Println("")
-		fmt.Printf("Member Count: %d", len(group.Users))
-		
-		fmt.Println("")
-		fmt.Println("")
-		fmt.Println("User Of Group: ")
-		for _, u := range group.Users {
-		fmt.Println(u.FirstName + " " + u.LastName)
-		}
-	}
 func main() {
-	// // initialize struct of User
-	user := User{}
-	
-	// // method insert data into struct 1
-	user.ID = 1
-	user.FirstName = "Dedi"
-	user.LastName = "Fardiyanto"
-	user.Email = "dedif15@gmail.com"
-	user.IsActive = true
+	router := gin.Default()
 
-	// // method insert data into struct 2
-	user2 := User{ID: 2, FirstName: "Dedi", LastName: "Fard", Email: "dedif15@gmail.com", IsActive: true}
-	fmt.Println("User Struct-------------------------------------------------------")
-	fmt.Println(user)
-	fmt.Println(user2)
-	fmt.Println("-------------------------------------------------------")
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"name": "Dedi Fardiyanto",
+			"bio":  "Fullstack Developer",
+		})
+	})
 
-	fmt.Println(displayName(user))
-	fmt.Println(displayName(user2))
+	router.POST("/books", bookHandler)
 
-	fmt.Println("Group Struct-------------------------------------------------------")
-	users := []User{user, user2}
-	group := Group{Name: "Group 1", Admin: user, Users: users, IsAvailable: true}
-
-	displayGroup(group)
-	
-	fmt.Println("-------------------------------------------------------")
-	fmt.Println("")
-	
-	fmt.Println("Method-------------------------------------------------------")
-	fmt.Println(user2.display())
-	
-	fmt.Println("group.display()")
-	group.displayGroup()
+	router.Run(":80")
 }
 
-// struct as params func
-func displayName(user User) string {
-	return fmt.Sprintf("Name: %s %s, Email: %s", user.FirstName, user.LastName, user.Email)
-}
+func bookHandler(c *gin.Context) {
+	var bookInput BookInput
 
-func displayGroup(group Group) {
-	fmt.Println("")
-	fmt.Println("")
-	fmt.Printf("Name Of Group: %s", group.Name)
-	fmt.Println("")
-	fmt.Printf("Admin Of Group: %s", group.Admin.FirstName)
-	fmt.Println("")
-	fmt.Printf("Member Count: %d", len(group.Users))
-	
-	fmt.Println("")
-	fmt.Println("")
-	fmt.Println("User Of Group: ")
-	for _, u := range group.Users {
-	fmt.Println(u.FirstName + " " + u.LastName)
+	err := c.ShouldBindJSON(&bookInput)
+	if err != nil {
+		//fmt.Println(err)
+		//c.JSON(http.StatusBadRequest, err)
+		//return
+		errorMessage := []string{}
+
+		for _, e := range err.(validator.ValidationErrors) {
+			errorMsg := fmt.Sprintf("error on field: %s should: %s", e.Field(), e.ActualTag())
+			fmt.Println(errorMsg)
+			errorMessage := append(errorMessage, errorMsg)
+
+			c.JSON(http.StatusBadRequest, errorMessage)
+		}
+		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"title": bookInput.Title,
+		"price": bookInput.Price,
+	})
+
+}
+
+type BookInput struct {
+	Title string          `json:"title" binding:"required"`
+	Price jsoniter.Number `json:"price" binding:"required,number"`
 }
