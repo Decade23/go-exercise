@@ -1,56 +1,109 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	jsoniter "github.com/json-iterator/go"
-	"net/http"
+	book2 "go-exercise/book"
+	"go-exercise/db/tables"
+	handler "go-exercise/handler"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"log"
 )
 
 func main() {
+	dsn := "shinobi:shinobi@tcp(54.179.86.168:3306)/go_exercise?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.AutoMigrate(&tables.Book{})
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"name": "Dedi Fardiyanto",
-			"bio":  "Fullstack Developer",
-		})
-	})
+	service := book2.BookService(book2.RepoToDb(db))
+	bookHandler := handler.NewBookHandler(service)
+	//service.Create(book2.BookRequest{
+	//	Title:    "buku from new service",
+	//	Price:    "50000",
+	//	Discount: 30,
+	//})
 
-	router.POST("/books", bookHandler)
+	//cn := book2.RepoToDb(db)
+	//bookCreate := tables.Book{
+	//	Title: "buku baru banget",
+	//	Price: 50000,
+	//	Discount: 50,
+	//}
+	//b, _ := cn.Create(bookCreate)
+
+	//fmt.Println("find by id ",b)
+
+	/*
+	* create data on db
+	 */
+	//b := tables.Book{}
+	//b.Title = "man of power"
+	//b.Discount = 20
+	//b.Price = 50000
+	//err = db.Create(&b).Error
+	//
+	//if err != nil {
+	//	fmt.Println("============== error create a book ==============")
+	//	fmt.Println(err)
+	//}
+
+	/*
+	* retrieve data on db
+	 */
+	//var b tables.Book
+	//err = db.Last(&b).Error
+	//if err != nil {
+	//	fmt.Println("============= failed to retrieved data ===============")
+	//	fmt.Println(err)
+	//}
+	//fmt.Println("titile of book::: ", b.Title)
+	//fmt.Println("book::: ",b)
+
+	/*
+	* update data on db
+	 */
+	//var b tables.Book
+	//err = db.Debug().Where("title = ?", "power ranger").First(&b).Error
+	//if err != nil {
+	//	fmt.Println("========== error when find data ============")
+	//	fmt.Println(err)
+	//}
+	//
+	//b.Title = "power ranger update"
+	//err = db.Save(&b).Error
+	//if err != nil {
+	//	fmt.Println("========== error when update data ============")
+	//	fmt.Println(err)
+	//}
+	//fmt.Println("title ", b.Title)
+	//fmt.Println("object book ", b)
+
+	/*
+	* delete on db
+	 */
+	//var b tables.Book
+	//err = db.Debug().Where("id = ? ", 2).First(&b).Error
+	//if err != nil {
+	//	fmt.Println("=============== failed find the data =================")
+	//	fmt.Println(err)
+	//}
+	//
+	//// delete it
+	//err = db.Delete(&b).Error
+	//if err != nil {
+	//	fmt.Println("=============== failed find the data =================")
+	//	fmt.Println(err)
+	//}
+
+	v1 := router.Group("v1")
+
+	v1.GET("/", bookHandler.BookGetHandler)
+
+	v1.POST("/book", bookHandler.BookHandlerPost)
 
 	router.Run(":80")
-}
-
-func bookHandler(c *gin.Context) {
-	var bookInput BookInput
-
-	err := c.ShouldBindJSON(&bookInput)
-	if err != nil {
-		//fmt.Println(err)
-		//c.JSON(http.StatusBadRequest, err)
-		//return
-		errorMessage := []string{}
-
-		for _, e := range err.(validator.ValidationErrors) {
-			errorMsg := fmt.Sprintf("error on field: %s should: %s", e.Field(), e.ActualTag())
-			fmt.Println(errorMsg)
-			errorMessage := append(errorMessage, errorMsg)
-
-			c.JSON(http.StatusBadRequest, errorMessage)
-		}
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"title": bookInput.Title,
-		"price": bookInput.Price,
-	})
-
-}
-
-type BookInput struct {
-	Title string          `json:"title" binding:"required"`
-	Price jsoniter.Number `json:"price" binding:"required,number"`
 }
